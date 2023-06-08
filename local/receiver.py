@@ -11,6 +11,7 @@ class ImageReceiver:
     def __init__(self, ip, port):
         self.ip = ip
         self.port = port
+        self.sock.bind((self.ip,self.port))
 
     def rec_disp_image(self):
         x = self.sock.recvfrom(1000000)
