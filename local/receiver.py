@@ -3,6 +3,7 @@
 import pickle
 import socket
 import cv2
+import numpy as np
 
 
 class ImageReceiver:
@@ -13,7 +14,7 @@ class ImageReceiver:
         self.port = port
         self.sock.bind((self.ip,self.port))
 
-    def rec_disp_image(self):
+    def rec_disp_image(self) -> np.ndarray:
         x = self.sock.recvfrom(1000000)
         client_ip = x[1][0]
         image_data = x[0]

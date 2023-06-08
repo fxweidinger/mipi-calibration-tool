@@ -1,12 +1,11 @@
 #  Copyright (c) Felix Weidinger (fxweidinger) 2023
 
-import cv2, socket, numpy, pickle
+import cv2
 import receiver
 
 receiver = receiver.ImageReceiver(ip="localhost", port=9999)
 
 while True:
-
     data = receiver.rec_disp_image()
     height = data.shape[0]
     width = data.shape[1]

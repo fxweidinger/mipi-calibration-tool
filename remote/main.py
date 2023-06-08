@@ -38,7 +38,7 @@ print(
 '''
 Main Loop:
 Waits for keypress to take a frame and perform calibration.
-The calibration requires 10 images 
+The calibration requires 10 images cx
 '''
 
 while True:
@@ -49,7 +49,7 @@ while True:
         print("--- Error: Can't grab frames or aborted---")
         break
     while trigger:
-        transmitter.send_image(frame, 20)
+        transmitter.send_image(frame, 60)
         image_cnt += 1
         trigger = False
     cv2.waitKey()
