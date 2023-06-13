@@ -15,7 +15,7 @@ class Calibration:
 
     def __init__(self, focal_length_x: float, focal_length_y: float,
                  optical_center_x: float, optical_center_y: float,
-                 pattern_size: List[int],
+                 pattern_size: tuple[int, int],
                  termination_criteria: List[float] = None):
 
         # Intrinsic Parameters
@@ -49,8 +49,8 @@ class Calibration:
         self.objp[:, :2] = np.mgrid[0:self.pattern_size[0],
                            0:self.pattern_size[1]].T.reshape(-1, 2)
 
-    def init_params_circular_pattern(self, threshold: List[int],
-                                     area: List[float] = None,
+    def init_params_circular_pattern(self, threshold: tuple[int, int],
+                                     area: tuple[float, float] = None,
                                      min_circle: float = None,
                                      min_convex: float = None,
                                      min_inertia: float = None):
@@ -78,29 +78,31 @@ class Calibration:
 
         self.blob_detector = cv2.SimpleBlobDetector_create(blob_params)
 
-    def find_circles(self, frame: numpy.ndarray) -> (bool, np.ndarray):
+    def find_circles(self, frame: numpy.ndarray) -> tuple[bool, np.ndarray]:
 
         refined_frame: np.ndarray
-        blobs = self.blob_detector.detect(frame)
+        # blobs = self.blob_detector.detect(frame)
 
-        blobs_overlaid = cv2.drawKeypoints(frame, blobs, np.array([]),
-                                           (0, 255, 0),
-                                           cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        blobs_overlaid_gray = cv2.cvtColor(blobs_overlaid, cv2.COLOR_BGR2GRAY)
-        ret, circles = cv2.findCirclesGrid(blobs_overlaid_gray, (
+        # blobs_overlaid = cv2.drawKeypoints(frame, blobs, np.array([]),
+        #                                   (0, 255, 0),
+        #                                   cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        cvt = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        ret, circles = cv2.findCirclesGrid(frame, (
             self.pattern_size[0], self.pattern_size[1]),
                                            flags=self.symmetry,
-                                           blobDetector=self.blob_detector, parameters=None)
+                                           blobDetector=self.blob_detector,
+                                           parameters=None)
         if ret:
             self.object_points.append(self.objp)
-            circles2 = cv2.cornerSubPix(blobs_overlaid_gray, circles, (1, 1),
-                                        (0, 0), self.termination_criteria)
+            circles2 = cv2.cornerSubPix(cvt, circles, (1, 1),
+                                        (-1, -1), self.termination_criteria)
             self.img_points.append(circles2)
             refined_frame = cv2.drawChessboardCorners(frame, (
                 self.pattern_size[0], self.pattern_size[1]), circles2,
                                                       ret)
             return True, refined_frame
-        return False,  refined_frame
+        return False, None
+
     def init_params_checkerboard_pattern(self):
         # TODO
         print("--- Setting parameters for checkerboard calibration ---")
