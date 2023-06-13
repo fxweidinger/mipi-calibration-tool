@@ -12,7 +12,7 @@ class ImageReceiver:
     def __init__(self, ip, port):
         self.ip = ip
         self.port = port
-        self.sock.bind((self.ip,self.port))
+        self.sock.bind((self.ip, self.port))
 
     def rec_disp_image(self) -> np.ndarray:
         x = self.sock.recvfrom(1000000)
@@ -21,4 +21,3 @@ class ImageReceiver:
         image_data = pickle.loads(image_data)
         image_data = cv2.imdecode(image_data, cv2.IMREAD_GRAYSCALE)
         return image_data
-

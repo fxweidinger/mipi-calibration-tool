@@ -12,4 +12,3 @@ class EventHandler:
 
     def stop(self):
         self.listener.stop()
-

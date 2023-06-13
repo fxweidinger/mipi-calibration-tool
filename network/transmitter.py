@@ -7,6 +7,8 @@ import cv2
 '''
 Allows sending images over the network. Currently is hardcoded to UDP.
 '''
+
+
 class ImageTransmitter:
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 1000000)
@@ -22,4 +24,3 @@ class ImageTransmitter:
 
     def close(self):
         self.sock.close()
-

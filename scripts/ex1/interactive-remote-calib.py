@@ -5,7 +5,7 @@ from pynput import keyboard
 import event_handler
 import transmitter
 
-cap = cv2.VideoCapture(cv2.CAP_V4L2)
+cap = cv2.VideoCapture(0)
 transmitter = transmitter.ImageTransmitter("localhost", 9999)
 image_cnt = 0
 trigger = False
@@ -27,7 +27,8 @@ def on_press(key):
         cap.release()
 
 
-event_handler = event_handler.EventHandler(listener=keyboard.Listener(on_press=on_press))
+event_handler = event_handler.EventHandler(
+    listener=keyboard.Listener(on_press=on_press))
 
 print(
     "\nAdjust the camera so calibration pattern is in focus. After taking an image of the calibration pattern,"
